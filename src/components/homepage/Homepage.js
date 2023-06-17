@@ -1,12 +1,18 @@
+import { UserCollectionList } from "../collections/UserCollectionList"
 
 
 
 //profile view
 export const Homepage=()=>{
 
+    //some declarations
+    const localUser = localStorage.getItem("media_user")
+    const localUserObject = JSON.parse(localUser)
+
     return (<>
         <section>
             //section  contains profile info and your collections
+            <h2>User Info</h2>
             <div>
                 //profile info
                 <div>
@@ -20,6 +26,8 @@ export const Homepage=()=>{
             <div>
                 //create new collection button
                 //collections
+                <h2>Your Collections</h2>
+                {UserCollectionList(localUserObject.id)}
             </div>
 
         </section>
