@@ -1,4 +1,5 @@
 import { UserCollectionList } from "../collections/UserCollectionList"
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -8,6 +9,7 @@ export const Homepage=()=>{
     //some declarations
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
+    const navigate = useNavigate()
 
     return (<>
         <section>
@@ -27,6 +29,7 @@ export const Homepage=()=>{
                 //create new collection button
                 //collections
                 <h2>Your Collections</h2>
+                <button onClick={()=>{navigate("/createcollection")}}>Create a Collection</button>
                 {UserCollectionList(localUserObject.id)}
             </div>
 
