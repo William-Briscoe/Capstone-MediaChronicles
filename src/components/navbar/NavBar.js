@@ -10,6 +10,13 @@ export const NavBar = () => {
                 <Link className="navbar__link" to="/tickets">Tickets</Link>
             </li> */}
             {
+                <li className="navbar__item navbar__createcollection">
+                    <Link className="navbar__link" to="/createcollection" onClick={()=>{
+                        navigate("/createcollection")
+                    }}>Create a Collection</Link>
+                </li>
+            }
+            {
                 localStorage.getItem("media_user")
                     ? <li className="navbar__item navbar__logout">
                         <Link className="navbar__link" to="" onClick={() => {
@@ -19,6 +26,7 @@ export const NavBar = () => {
                     </li>
                     : ""
             }
+            
         </ul>
     )
 }

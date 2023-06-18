@@ -2,6 +2,14 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export const CollectionCreation = () =>{
+
+    //will redirect user to profile view
+    const navigate = useNavigate()
+    //other declarations
+    const localUser = localStorage.getItem("media_user")
+    const localUserObject = JSON.parse(localUser)
+
+
     //intital state
     const [collection, update] = useState({
         name:"",
@@ -9,13 +17,6 @@ export const CollectionCreation = () =>{
         description:"",
         isPrivate: false
     })
-
-    //will redirect user to profile view
-    const navigate = useNavigate()
-
-    const localUser = localStorage.getItem("media_user")
-    const localUserObject = JSON.parse(localUser)
-
     //we gon save with this one
     const handleSaveButtonClick = (event) =>{
         event.preventDefault()
@@ -30,7 +31,6 @@ export const CollectionCreation = () =>{
             isPrivate: collection.isPrivate,
             dateCreated: ""
         }
-
 
         //sends object to api
         return fetch(`http://localhost:8088/collection`, {
