@@ -2,6 +2,7 @@ import { Outlet, Route, Routes } from "react-router-dom"
 import { Homepage } from "../homepage/Homepage"
 import { CollectionCreation } from "../collections/CollectionCreation"
 import { MediaCreation } from "../media/MediaCreation"
+import { MediaContainer } from "../media/MediaContainer"
 
 
 //all my views/pages
@@ -17,6 +18,7 @@ export const AppViews = () =>{
             </Route>
 
             <Route path="/createmedia" element={<MediaCreation/>}></Route>
+            <Route path="/medialist" element={<MediaContainer/>}/>
         </Routes>
     )
 }
