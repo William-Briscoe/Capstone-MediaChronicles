@@ -24,6 +24,14 @@ export const NavBar = () => {
             }
 
             {
+                <li className="navbar__item navbar__userlist">
+                <Link className="navbar__link" to="/userlist" onClick={()=>{
+                    navigate("/userlist")
+                }}>Users</Link>
+            </li>
+            }
+
+            {
                 <li className="navbar__item navbar__createcollection">
                     <Link className="navbar__link" to="/createcollection" onClick={()=>{
                         navigate("/createcollection")
