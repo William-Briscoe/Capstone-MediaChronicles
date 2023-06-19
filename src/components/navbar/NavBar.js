@@ -8,6 +8,14 @@ export const NavBar = () => {
         <ul className="navbar">
 
             {
+                <li className="navbar__item navbar__medialist">
+                    <Link className="navbar__link" to="/medialist" onClick={()=>{
+                        navigate("/medialist")
+                    }}>Media</Link>
+                </li>
+            }
+
+            {
                 <li className="navbar__item navbar__createcollection">
                     <Link className="navbar__link" to="/createcollection" onClick={()=>{
                         navigate("/createcollection")
