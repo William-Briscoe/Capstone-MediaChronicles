@@ -6,9 +6,7 @@ export const NavBar = () => {
 
     return (
         <ul className="navbar">
-            {/* <li className="navbar__item active">
-                <Link className="navbar__link" to="/tickets">Tickets</Link>
-            </li> */}
+
             {
                 <li className="navbar__item navbar__createcollection">
                     <Link className="navbar__link" to="/createcollection" onClick={()=>{
@@ -16,6 +14,15 @@ export const NavBar = () => {
                     }}>Create a Collection</Link>
                 </li>
             }
+
+            {
+                <li className="navbar__item navbar__createmediaitem">
+                <Link className="navbar__link" to="/createmedia" onClick={()=>{
+                    navigate("/createmedia")
+                }}>Add a Media Item</Link>
+            </li>
+            }
+
             {
                 localStorage.getItem("media_user")
                     ? <li className="navbar__item navbar__logout">
@@ -25,8 +32,9 @@ export const NavBar = () => {
                         }}>Logout</Link>
                     </li>
                     : ""
-            }
             
+            }
+
         </ul>
     )
 }
