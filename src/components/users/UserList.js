@@ -55,7 +55,7 @@ export const UserList = ({searchTermState}) =>{
         
         <section className="UsersList">
             {filteredUsers.map((user)=>{
-                return <div className="user" key={user.id}>
+                return <div className="user" key={user.id} data-id={user.id}>
                     <header>{user.name}</header>
 
                 </div>
