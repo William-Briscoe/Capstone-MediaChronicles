@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
-export const UserList = ({searchTermState}) =>{
+export const UserList = ({ searchTermState }) => {
     const [users, setUsers] = useState([])
     const [filteredUsers, setFilteredUsers] = useState([])
 
@@ -12,10 +12,10 @@ export const UserList = ({searchTermState}) =>{
 
 
     useEffect(
-        ()=>{
+        () => {
             fetch(`http://localhost:8088/media`)
                 .then(response => response.json())
-                .then((usersArray) =>{
+                .then((usersArray) => {
                     setUsers(usersArray)
                 })
             console.log("Initial state of media", users)
@@ -27,13 +27,13 @@ export const UserList = ({searchTermState}) =>{
         fetch("http://localhost:8088/users")
             .then((response) => response.json())
             .then((usersArray) => {
-            setUsers(usersArray);
-            setFilteredUsers(users);
-        })
+                setUsers(usersArray)
+                setFilteredUsers(users)
+            })
     }, [])
 
     useEffect(
-        ()=>{
+        () => {
             setFilteredUsers(users)
         },
         []
@@ -41,22 +41,28 @@ export const UserList = ({searchTermState}) =>{
 
     //observes state of the search bar to filter
     useEffect(
-        ()=>{
+        () => {
             console.log(searchTermState)
-            const searchedUser = users.filter(user =>{
+            const searchedUser = users.filter(user => {
                 return user.name.toLowerCase().startsWith(searchTermState.toLowerCase())
             })
             setFilteredUsers(searchedUser)
         },
-        [ searchTermState ]
+        [searchTermState]
     )
-    
-    return(
-        
+
+    return (
+
         <section className="UsersList">
-            {filteredUsers.map((user)=>{
+            {filteredUsers.map((user) => {
                 return <div className="user" key={user.id} data-id={user.id}>
-                    <header>{user.name}</header>
+                    {/* <header>{user.name}</header> */}
+                    <header>
+                        <a href={`/user/${user.id}`} onClick={(event) => {
+                            event.preventDefault()
+                            navigate(`/user/${user.id}`)
+                        }}>{user.name}</a>
+                    </header>
 
                 </div>
             })}

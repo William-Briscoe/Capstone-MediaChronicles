@@ -4,6 +4,7 @@ import { CollectionCreation } from "../collections/CollectionCreation"
 import { MediaCreation } from "../media/MediaCreation"
 import { MediaContainer } from "../media/MediaContainer"
 import { UserContainer } from "../users/UserContainer"
+import { UserPage } from "../users/UserPage"
 
 
 //all my views/pages
@@ -21,6 +22,8 @@ export const AppViews = () =>{
             <Route path="/createmedia" element={<MediaCreation/>}></Route>
             <Route path="/medialist" element={<MediaContainer/>}/>
             <Route path="/userlist" element={<UserContainer/>}/>
+            <Route path="/user/:userId" element={<UserPage/>}/>
+
         </Routes>
     )
 }
