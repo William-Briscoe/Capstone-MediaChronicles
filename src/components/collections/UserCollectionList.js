@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom"
 
 //user collection view
 export const UserCollectionList = (userId) =>{
+
+    const navigate = useNavigate()
     const [collections, setCollections] = useState([])
     const [filteredCollections, setFilteredCollections] = useState([])
 
@@ -36,8 +38,11 @@ export const UserCollectionList = (userId) =>{
                 filteredCollections.map(
                     (collection)=>{
                         return <div className="userCollectionItem">
-                            <header>{collection.name}</header> {/*<link to="/destination">text for link</link>*/}
-                            <img src={collection.picture} alt="Collection image not found XP"/>
+                            <header><a href={`/collection/${collection.id}`} onClick={(event) => {
+                            event.preventDefault()
+                            navigate(`/collection/${collection.id}`)
+                        }}>{collection.name}
+                            <img src={collection.picture} alt="Collection image not found XP" width={100}/></a></header>
                         </div>
                     }
                 )

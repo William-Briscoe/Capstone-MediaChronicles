@@ -5,6 +5,8 @@ import { MediaCreation } from "../media/MediaCreation"
 import { MediaContainer } from "../media/MediaContainer"
 import { UserContainer } from "../users/UserContainer"
 import { UserPage } from "../users/UserPage"
+import { IndividualCollection } from "../collections/IndividualCollection"
+import { EditCollection } from "../collections/EditCollection"
 
 
 //all my views/pages
@@ -21,8 +23,12 @@ export const AppViews = () =>{
 
             <Route path="/createmedia" element={<MediaCreation/>}></Route>
             <Route path="/medialist" element={<MediaContainer/>}/>
+
             <Route path="/userlist" element={<UserContainer/>}/>
             <Route path="/user/:userId" element={<UserPage/>}/>
+
+            <Route path="/collection/:collectionId" element={<IndividualCollection/>}/>
+            <Route path="/editcollection/:collectionId" element={<EditCollection/>}/>
 
         </Routes>
     )

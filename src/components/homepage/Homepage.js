@@ -10,7 +10,8 @@ export const Homepage=()=>{
     //some declarations
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
-    const [currentUser, setCurrentUser] =useState([])
+    const [currentUser, setCurrentUser] =useState({})
+    const [loading, setLoading] = useState([false])
 
     useEffect(()=>{
         fetch(`http://localhost:8088/users/${localUserObject.id}`)
@@ -21,10 +22,17 @@ export const Homepage=()=>{
         },
         [])
 
+
+
+
+
     console.log(currentUser)
 
-    return (<>
-        {ProfilePage(currentUser)}
-        </>
+    return (
+        
+        <>{ProfilePage(currentUser)}</>
+        
+        
+        
     )
 }
