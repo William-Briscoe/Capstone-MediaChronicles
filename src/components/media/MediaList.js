@@ -106,6 +106,9 @@ export const MediaList = ({ searchTermState }) => {
                     <button onClick={() => addToCollection(media.id, selectedCollectionId)}>
                         +
                     </button>
+                    {(media.userId === localUserObject.id || localUserObject.admin === true) ? <>
+                    <button>edit media</button>
+                    </>:<></>}
                 </div>
             })}
         </section>

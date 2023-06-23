@@ -19,7 +19,7 @@ export const ProfilePage = (userObject) =>{
             
             <div>
                 <div>
-                    <img src={userObject.picture} alt="beautiful profile pic UwU" width={80} height={100}/>
+                    <img src={userObject.picture} alt="beautiful profile pic" width={80} height={100}/>
                 </div>
                 <div>
                     <div className="name">{userObject.name}</div>
