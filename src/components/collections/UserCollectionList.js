@@ -38,11 +38,12 @@ export const UserCollectionList = (userId) =>{
                 filteredCollections.map(
                     (collection)=>{
                         return <div className="userCollectionItem">
-                            <header><a href={`/collection/${collection.id}`} onClick={(event) => {
+                            <a href={`/collection/${collection.id}`} onClick={(event) => {
                             event.preventDefault()
                             navigate(`/collection/${collection.id}`)
-                        }}>{collection.name}
-                            <img src={collection.picture} alt="Collection image not found XP" width={100}/></a></header>
+                        }}>
+                            <header>{collection.name}</header>
+                            {collection.picture ? <img src={collection.picture} alt="Collection image not found XP" width={100}/>: <></>}</a>
                         </div>
                     }
                 )

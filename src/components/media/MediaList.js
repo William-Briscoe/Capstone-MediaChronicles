@@ -6,12 +6,59 @@ export const MediaList = ({ searchTermState }) => {
     const [mediaItems, setMediaItems] = useState([])
     const [filteredMedia, setFilteredMedia] = useState([])
     const [collections, setCollections] = useState([])
-    const [selectedCollectionId, setSelectedCollectionId] = useState(null);
+    const [selectedCollectionId, setSelectedCollectionId] = useState([]);
+    const [platformFilter, setPlatformFilter] = useState(0)
+    const [platformsArray, setPlatformsArray] = useState([])
 
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
     const navigate = useNavigate()
 
+    useEffect(()=>{
+        fetch(`http://localhost:8088/platform`)
+        .then((reponse)=> reponse.json())
+        .then((data)=>{
+            setPlatformsArray(data)
+        })
+    }, [])
+
+
+
+    const filterByPlatform = (mediaArray, platformId) => {
+        return mediaArray.filter((media) => parseInt(media.platformId) === parseInt(platformId))
+    }
+    
+    useEffect(() => {
+        fetch("http://localhost:8088/media")
+            .then((response) => response.json())
+            .then((mediaArray) => {
+                setMediaItems(mediaItems)
+                {if(platformFilter > 0){
+                const mediaArrayFilteredByPlatform = filterByPlatform(mediaArray, platformFilter)
+                setFilteredMedia(mediaArrayFilteredByPlatform)}else{
+                    setFilteredMedia(mediaItems)
+                }}
+            })
+            console.log(filteredMedia)
+    }, [platformFilter])
+
+    // useEffect(() => {
+    //     //setFilteredMedia(mediaItems)
+    //     console.log(filteredMedia)
+    //     const mediaArrayFilteredByPlatform = filterByPlatform(mediaItems, platformFilter);
+    //     setFilteredMedia(mediaArrayFilteredByPlatform);
+    //     console.log(filteredMedia)
+    // }, [platformFilter]);
+
+
+
+    // useEffect(()=>{
+    //     const mediaArrayFilteredByPlatform = []
+    //     filteredMedia.filter((media)=> media.platformId === platformFilter)
+    //     setFilteredMedia(mediaArrayFilteredByPlatform)
+    //     console.log(filteredMedia)
+    //     console.log(platformFilter)
+    // }, [platformFilter])
 
     useEffect(() => {
         fetch("http://localhost:8088/media")
@@ -30,7 +77,7 @@ export const MediaList = ({ searchTermState }) => {
                 .then((mediaArray) => {
                     setMediaItems(mediaArray)
                 })
-            console.log("Initial state of media", mediaItems)
+            // console.log("Initial state of media", mediaItems)
         },
         []
     )
@@ -59,11 +106,13 @@ export const MediaList = ({ searchTermState }) => {
         () => {
             console.log(searchTermState)
             const searchedMedia = mediaItems.filter(media => {
-                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase())
+                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase()) && (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter))
             })
             setFilteredMedia(searchedMedia)
+            console.log(filteredMedia)
+            console.log(platformFilter)
         },
-        [searchTermState]
+        [searchTermState, filteredMedia]
     )
 
 
@@ -85,12 +134,25 @@ export const MediaList = ({ searchTermState }) => {
             .then(response => response.json())
     }
 
-    return (
-
+    return (<>
+        <section className="searchfilters">
+            Filter by Platform:<select
+                
+                value={platformFilter}
+                onChange={(event)=> setPlatformFilter(event.target.value)}>
+                    <option value={0}>Any</option>
+                    {platformsArray.map((platform)=>(
+                        <option key={platform.id} value={platform.id}>
+                            {platform.name}
+                        </option>
+                    ))}
+                
+            </select>
+        </section>
         <section className="MediaList">
             {filteredMedia.map((media) => {
                 return <div className="mediaItem" key={media.id} data-id={media.id}>
-                    <header>{media.title}</header>
+                    <h2>{media.title}</h2>
                     <img src={media.image} alt="image not found XP" width={100} />
                     {/*dropdown and button to add item to collection */}
                     <select
@@ -103,14 +165,14 @@ export const MediaList = ({ searchTermState }) => {
                             </option>
                         ))}
                     </select>
-                    <button onClick={() => addToCollection(media.id, selectedCollectionId)}>
+                    <button onClick={() =>selectedCollectionId != 0 ? addToCollection(media.id, selectedCollectionId): <></>}>
                         +
                     </button>
                     {(media.userId === localUserObject.id || localUserObject.admin === true) ? <>
-                    <button>edit media</button>
+                    <button onClick={()=>{navigate(`/editmedia/${media.id}`)}}>edit media</button>
                     </>:<></>}
                 </div>
             })}
         </section>
-    )
+    </>)
 }

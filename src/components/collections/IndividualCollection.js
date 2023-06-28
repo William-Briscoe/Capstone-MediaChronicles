@@ -18,9 +18,6 @@ export const IndividualCollection = () =>{
     const [media, setMedia] = useState([])
     const [collectionContents, setCollectionContents] = useState([])
 
-    const handleEditButtonClick = (event) =>{
-        
-    }
 
     const handleDeleteButtonClick= (event) =>{
         event.preventDefault()
@@ -116,9 +113,10 @@ export const IndividualCollection = () =>{
             <div>
                 {loading ?
                 <div>loading...</div>
-                :
-                <h1>{collection.name} by {collectionsUser.name}</h1>
-                }
+                :<>
+                <h1>{collection.name} </h1>
+                <h3>by {collectionsUser.name}</h3>
+                </>}
                 
             </div>
             <div>{collection.description}</div>
@@ -132,7 +130,7 @@ export const IndividualCollection = () =>{
             </div>
         </section>
             {collectionContents.map((itemm)=>{
-                return(<><h2>{itemm.title}</h2>
+                return(<><h3>{itemm.title}</h3>
                 <img src={itemm.image} alt="oh no" width={100}></img></>)
             })}
         <section>

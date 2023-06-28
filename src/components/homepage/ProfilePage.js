@@ -12,6 +12,10 @@ export const ProfilePage = (userObject) =>{
 
     console.log(userObject)
 
+    const handleEditButtonClick = () =>{
+
+    }
+
 
     return (<>
         <h2>User Info</h2>
@@ -24,6 +28,11 @@ export const ProfilePage = (userObject) =>{
                 <div>
                     <div className="name">{userObject.name}</div>
                     <div className="bio">{userObject.bio}</div>
+                </div>
+                <div>
+                    {userObject.id === localUserObject.id ? <button onClick={() =>{
+                        navigate(`/editprofile/${localUserObject.id}`)
+                    }}>Edit Profile</button>: <></>}
                 </div>
             </div>
             <div>

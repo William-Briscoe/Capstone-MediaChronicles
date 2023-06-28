@@ -7,7 +7,7 @@ export const MediaSearch = ({ setterFunction }) =>{
                     setterFunction(changeEvent.target.value)
                 }
             }
-        type="text" placeholder="Enter the title"/>
+        type="text" placeholder="Enter The Title"/>
         </div>
     )
 }
