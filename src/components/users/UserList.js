@@ -61,7 +61,7 @@ export const UserList = ({ searchTermState }) => {
                         <a href={`/user/${user.id}`} onClick={(event) => {
                             event.preventDefault()
                             navigate(`/user/${user.id}`)
-                        }}>{user.name}</a>
+                        }}><img src={user.picture} height={100}/>{user.name}</a>
                     </header>
 
                 </div>

@@ -7,7 +7,9 @@ export const MediaCreation = () => {
     const localUserObject = JSON.parse(localUser)
     const navigate = useNavigate()
     const [platforms, setPlatforms] = useState([])
-
+    const [genres, setGenres] = useState([])
+    const [selectedGenres, setSelectedGenres] = useState([])
+    const [isGame, setIsGame] = useState(null)
     // initial state
     const [media, update] = useState({
         platformId: "",
@@ -18,6 +20,37 @@ export const MediaCreation = () => {
 
         dateLogged: ""
     })
+
+
+    //checks if media item is game or not
+    useEffect(() => {
+        if (media.platformId > 3) {
+            setIsGame(true)
+        } else {
+            setIsGame(false)
+        }
+        console.log(isGame)
+    },
+        [media.platformId]
+    )
+
+    useEffect(() => {
+        console.log(selectedGenres)
+    }, [selectedGenres])
+
+    //genre array
+    useEffect(
+        () => {
+            fetch(`http://localhost:8088/genre`)
+                .then(response => response.json())
+                .then((data) => {
+                    setGenres(data)
+                })
+            console.log("genre array", genres)
+        },
+        []
+    )
+
 
     //platform array
     useEffect(
@@ -122,13 +155,19 @@ export const MediaCreation = () => {
                         id="platformId"
                         value={media.platformId}
                         onChange={(evt) => {
-                            const copy = { ...media };
-                            copy.platformId = evt.target.value;
-                            update(copy);
+                            const copy = { ...media }
+                            copy.platformId = evt.target.value
+                            update(copy)
+                            //     {if(copy.platformId > 3){
+                            //         setIsGame(true)
+                            //     }else{
+                            //         setIsGame(false)
+                            //     }
+                            // console.log(isGame)}
                         }}
                     >
                         <option value="">Select a platform</option>
-                        {platforms.map((platform)=>(
+                        {platforms.map((platform) => (
                             <option key={platform.id} value={platform.id}>
                                 {platform.name}
                             </option>
@@ -152,6 +191,42 @@ export const MediaCreation = () => {
                                 update(copy)
                             }
                         } />
+                </div>
+            </fieldset>
+            <fieldset>
+                <div>
+                    <label htmlFor="genres">Genres:</label>
+                    {genres.map((genre) => {
+                        if (
+                            (isGame && genre.id >= 10 && genre.id <= 20) ||
+                            (!isGame && genre.id >= 1 && genre.id <= 9)
+                        ) {
+                            return (
+                                <div key={genre.id}>
+                                    <input
+                                        type="checkbox"
+                                        id={`genre-${genre.id}`}
+                                        name={genre.name}
+                                        checked={genre.checked}
+                                        onChange={(event) => {
+                                            const updatedGenres = genres.map((g) => {
+                                                if (g.id === genre.id) {
+                                                    return {
+                                                        ...g,
+                                                        checked: event.target.checked
+                                                    }
+                                                }
+                                                return g
+                                            })
+                                            setSelectedGenres(updatedGenres)
+                                        }}
+                                    />
+                                    <label htmlFor={`genre-${genre.id}`}>{genre.name}</label>
+                                </div>
+                            )
+                        }
+                        return null
+                    })}
                 </div>
             </fieldset>
             <button
