@@ -70,18 +70,6 @@ export const MediaList = ({ searchTermState }) => {
     }, [])
 
 
-    useEffect(
-        () => {
-            fetch(`http://localhost:8088/media`)
-                .then(response => response.json())
-                .then((mediaArray) => {
-                    setMediaItems(mediaArray)
-                })
-            // console.log("Initial state of media", mediaItems)
-        },
-        []
-    )
-
     //grabs the collections array
     useEffect(
         () => {
@@ -106,13 +94,14 @@ export const MediaList = ({ searchTermState }) => {
         () => {
             console.log(searchTermState)
             const searchedMedia = mediaItems.filter(media => {
-                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase()) && (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter))
+                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase()) && 
+                (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter))
             })
             setFilteredMedia(searchedMedia)
             console.log(filteredMedia)
             console.log(platformFilter)
         },
-        [searchTermState, filteredMedia]
+        [searchTermState, mediaItems]
     )
 
 
