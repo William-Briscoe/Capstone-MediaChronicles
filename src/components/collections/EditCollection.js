@@ -28,7 +28,7 @@ export const EditCollection = () =>{
 
 
     useEffect(()=>{
-        return fetch(`http://localhost:8088/collection/${collectionId}`)
+        fetch(`http://localhost:8088/collection/${collectionId}`)
         .then((response)=>response.json())
         .then((thiscollection)=>{
             setCollection(thiscollection)

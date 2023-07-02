@@ -115,7 +115,7 @@ export const CollectionCreation = () =>{
                                 copy.isPrivate =event.target.checked
                                 update(copy)
                             }
-                        }/>
+                        }/>Private this collection?
                 </div>
             </fieldset>
             <button

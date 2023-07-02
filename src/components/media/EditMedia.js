@@ -10,6 +10,34 @@ export const EditMedia = () => {
     const { mediaId } = useParams()
     const [platforms, setPlatforms] = useState([])
     const [media, update] = useState({})
+    const [genreJoin, setGenreJoin] = useState([])
+    const [isGame, setIsGame] = useState(null)
+    const [genres, setGenres] = useState([])
+    const [selectedGenres, setSelectedGenres] = useState([])
+
+    //inital state of selectedGenres
+    useEffect(()=>{
+        let temporaryGenreArray = []
+        for (const join of genreJoin) {
+            if(join.mediaId === mediaId){
+                for (const genre of genres) {
+                    if(join.genreId === genre.id){
+                        temporaryGenreArray.push(genre)
+                    }
+                }
+            }
+        }
+        setSelectedGenres(temporaryGenreArray)
+        console.log(selectedGenres)
+    },[genreJoin])
+
+    useEffect(()=>{
+        fetch(`http://localhost:8088/mediaGenre`)
+        .then(response => response.json())
+        .then((data)=>{
+            setGenreJoin(data)
+        })
+    }, [])
 
     // initial state
     useEffect(()=>{
@@ -20,6 +48,23 @@ export const EditMedia = () => {
         })
     },[])
 
+    //checks if media item is game or not
+    useEffect(() => {
+        if (media.platformId > 3) {
+            setIsGame(true)
+        } else {
+            setIsGame(false)
+        }
+        console.log(isGame)
+    },
+        [media.platformId]
+    )
+
+    //wipes selected genres if media type is changed
+    useEffect(() => {
+        setSelectedGenres([])
+    }, [isGame])
+
     //platform array
     useEffect(
         () => {
@@ -29,6 +74,19 @@ export const EditMedia = () => {
                     setPlatforms(platformsArray)
                 })
             console.log("initial state of platforms", platforms)//view all platforms
+        },
+        []
+    )
+
+    //genre array
+    useEffect(
+        () => {
+            fetch(`http://localhost:8088/genre`)
+                .then(response => response.json())
+                .then((data) => {
+                    setGenres(data)
+                })
+            console.log("genre array", genres)
         },
         []
     )
@@ -58,14 +116,53 @@ export const EditMedia = () => {
             body: JSON.stringify(mediaToBeSentToAPI)
         })
             .then(response => response.json())
-            .then(() => {
-                navigate("/medialist") //change this to link to all media page !@!!!!!!!!!!
+        
+    }
+
+    const handleGenreSave = () => {
+        // event.preventDefault()
+        for (const join of genreJoin) {
+            if(parseInt(join.mediaId) === parseInt(mediaId)){
+                fetch(`http://localhost:8088/mediaGenre/${join.id}`,{
+                    method: "DELETE"
+                })
+            }
+        }
+
+        for (const genre of selectedGenres) {
+            const genreJoinsToSendToAPI = {
+                genreId: genre.id,
+                mediaId: mediaId
+            }
+
+            fetch(`http://localhost:8088/mediaGenre`, {
+                method: "POST",
+                headers: {
+                    "content-Type": "application/json"
+                },
+                body: JSON.stringify(genreJoinsToSendToAPI)
             })
+                .then(response => response.json())
+        }
+        navigate('/medialist')
+    }
+
+    const handleDeleteMedia = (event) =>{
+        
+        event.preventDefault()
+
+        fetch(`http://localhost:8088/media/${mediaId}`, {
+            method: 'DELETE'
+        })
+        .then(()=>{
+            navigate('/medialist')
+        })
     }
 
     return (
         <form className="mediacreationform">
             <h2 className="mediaFormTitle">Edit Media Item</h2>
+            <button onClick={(clickEvent)=>{handleDeleteMedia(clickEvent)}}>Delete Media</button>
             <fieldset>
                 <div>
                     <label htmlFor="title">Title:</label>
@@ -155,8 +252,52 @@ export const EditMedia = () => {
                         } />
                 </div>
             </fieldset>
+            <fieldset>
+                <div>
+                    <label htmlFor="genres"><h4>RESET THE GENRES:</h4></label>
+                    {genres.map((genre) => {
+                        if (
+                            (isGame && genre.id >= 10) ||
+                            (!isGame && genre.id >= 1 && genre.id <= 9)
+                        ) {
+                            return (
+                                <div key={genre.id}>
+                                    <input
+                                        type="checkbox"
+                                        id={`${genre.id}`}
+                                        name={genre.name}
+                                        checked={genre.checked}
+                                        onChange={(event) => {
+                                            if (event.target.checked) {
+                                                for (const g of genres) {
+                                                    if (g.id === genre.id) {
+                                                        selectedGenres.push(genre)
+                                                    }
+                                                }
+                                            } else {
+                                                let thisgenrearray = []
+                                                for (const genre of selectedGenres) {
+                                                    if (genre.id != event.target.id) {
+                                                        thisgenrearray.push(genre)
+                                                    }
+                                                }
+                                                setSelectedGenres(thisgenrearray)
+                                            }
+                                            console.log(selectedGenres)
+                                        }}
+                                    />
+                                    <label htmlFor={`genre-${genre.id}`}>{genre.name}</label>
+                                </div>
+                            )
+                        }
+                        return null
+                    })}
+                </div>
+            </fieldset>
             <button
-                onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
+                onClick={(clickEvent) => {
+                    handleSaveButtonClick(clickEvent)
+                    handleGenreSave()}}
                 className="btn btn-primary">
                 Save Media Item
             </button>

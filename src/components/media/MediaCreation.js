@@ -10,6 +10,7 @@ export const MediaCreation = () => {
     const [genres, setGenres] = useState([])
     const [selectedGenres, setSelectedGenres] = useState([])
     const [isGame, setIsGame] = useState(null)
+    const [mediaArray, setMediaArray] = useState([])
     // initial state
     const [media, update] = useState({
         platformId: "",
@@ -21,6 +22,27 @@ export const MediaCreation = () => {
         dateLogged: ""
     })
 
+    const getLastObjectId = (arr) => {
+        return (arr.reduce(function (prev, current) {
+            if (current.id > prev.id) {
+                return current
+            } else {
+                return prev
+            }
+        }).id + 1)
+    }
+
+    useEffect(() => {
+        fetch(`http://localhost:8088/media`)
+            .then(response => response.json())
+            .then((data) => {
+                setMediaArray(data)
+            })
+    }, [])
+
+    useEffect(() => {
+        setSelectedGenres([])
+    }, [isGame])
 
     //checks if media item is game or not
     useEffect(() => {
@@ -82,7 +104,7 @@ export const MediaCreation = () => {
         }
 
         //sends object to api
-        return fetch(`http://localhost:8088/media`, {
+        fetch(`http://localhost:8088/media`, {
             method: "POST",
             headers: {
                 "content-Type": "application/json"
@@ -91,8 +113,30 @@ export const MediaCreation = () => {
         })
             .then(response => response.json())
             .then(() => {
-                navigate("/") //change this to link to all media page !@!!!!!!!!!!
+                //navigate("/")
             })
+    }
+
+
+    const handleGenreSave = () => {
+        let mediaIDtobe = getLastObjectId(mediaArray)
+
+        for (const genre of selectedGenres) {
+            const genreJoinsToSendToAPI = {
+                genreId: genre.id,
+                mediaId: mediaIDtobe
+            }
+
+            fetch(`http://localhost:8088/mediaGenre`, {
+                method: "POST",
+                headers: {
+                    "content-Type": "application/json"
+                },
+                body: JSON.stringify(genreJoinsToSendToAPI)
+            })
+                .then(response => response.json())
+        }
+        navigate('/medialist')
     }
 
     return (
@@ -158,12 +202,7 @@ export const MediaCreation = () => {
                             const copy = { ...media }
                             copy.platformId = evt.target.value
                             update(copy)
-                            //     {if(copy.platformId > 3){
-                            //         setIsGame(true)
-                            //     }else{
-                            //         setIsGame(false)
-                            //     }
-                            // console.log(isGame)}
+
                         }}
                     >
                         <option value="">Select a platform</option>
@@ -198,27 +237,33 @@ export const MediaCreation = () => {
                     <label htmlFor="genres">Genres:</label>
                     {genres.map((genre) => {
                         if (
-                            (isGame && genre.id >= 10 && genre.id <= 20) ||
+                            (isGame && genre.id >= 10) ||
                             (!isGame && genre.id >= 1 && genre.id <= 9)
                         ) {
                             return (
                                 <div key={genre.id}>
                                     <input
                                         type="checkbox"
-                                        id={`genre-${genre.id}`}
+                                        id={`${genre.id}`}
                                         name={genre.name}
                                         checked={genre.checked}
                                         onChange={(event) => {
-                                            const updatedGenres = genres.map((g) => {
-                                                if (g.id === genre.id) {
-                                                    return {
-                                                        ...g,
-                                                        checked: event.target.checked
+                                            if (event.target.checked) {
+                                                for (const g of genres) {
+                                                    if (g.id === genre.id) {
+                                                        selectedGenres.push(genre)
                                                     }
                                                 }
-                                                return g
-                                            })
-                                            setSelectedGenres(updatedGenres)
+                                            } else {
+                                                let thisgenrearray = []
+                                                for (const genre of selectedGenres) {
+                                                    if (genre.id != event.target.id) {
+                                                        thisgenrearray.push(genre)
+                                                    }
+                                                }
+                                                setSelectedGenres(thisgenrearray)
+                                            }
+                                            console.log(selectedGenres)
                                         }}
                                     />
                                     <label htmlFor={`genre-${genre.id}`}>{genre.name}</label>
@@ -230,7 +275,10 @@ export const MediaCreation = () => {
                 </div>
             </fieldset>
             <button
-                onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
+                onClick={(clickEvent) => {
+                    handleSaveButtonClick(clickEvent)
+                    handleGenreSave(clickEvent)
+                }}
                 className="btn btn-primary">
                 Save Media Item
             </button>
