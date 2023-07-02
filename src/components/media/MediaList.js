@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { Component, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
@@ -9,56 +9,49 @@ export const MediaList = ({ searchTermState }) => {
     const [selectedCollectionId, setSelectedCollectionId] = useState([]);
     const [platformFilter, setPlatformFilter] = useState(0)
     const [platformsArray, setPlatformsArray] = useState([])
+    const [count, setCount] = useState(0)
+    const [usersCollections, setUsersCollections] = useState([])
+    const [searchSetting, setSearchSetting] = useState(0)
+
 
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
     const navigate = useNavigate()
 
-    useEffect(()=>{
+
+    useEffect(() => {
         fetch(`http://localhost:8088/platform`)
-        .then((reponse)=> reponse.json())
-        .then((data)=>{
-            setPlatformsArray(data)
-        })
+            .then((reponse) => reponse.json())
+            .then((data) => {
+                setPlatformsArray(data)
+            })
     }, [])
 
-
+    useEffect(() => {
+        console.log('yo')
+    }, [count])
 
     const filterByPlatform = (mediaArray, platformId) => {
         return mediaArray.filter((media) => parseInt(media.platformId) === parseInt(platformId))
     }
-    
+
     useEffect(() => {
         fetch("http://localhost:8088/media")
             .then((response) => response.json())
             .then((mediaArray) => {
                 setMediaItems(mediaItems)
-                {if(platformFilter > 0){
-                const mediaArrayFilteredByPlatform = filterByPlatform(mediaArray, platformFilter)
-                setFilteredMedia(mediaArrayFilteredByPlatform)}else{
-                    setFilteredMedia(mediaItems)
-                }}
+                {
+                    if (platformFilter > 0) {
+                        const mediaArrayFilteredByPlatform = filterByPlatform(mediaArray, platformFilter)
+                        setFilteredMedia(mediaArrayFilteredByPlatform)
+                    } else {
+                        setFilteredMedia(mediaItems)
+                    }
+                }
             })
-            console.log(filteredMedia)
+        
+        console.log(filteredMedia)
     }, [platformFilter])
-
-    // useEffect(() => {
-    //     //setFilteredMedia(mediaItems)
-    //     console.log(filteredMedia)
-    //     const mediaArrayFilteredByPlatform = filterByPlatform(mediaItems, platformFilter);
-    //     setFilteredMedia(mediaArrayFilteredByPlatform);
-    //     console.log(filteredMedia)
-    // }, [platformFilter]);
-
-
-
-    // useEffect(()=>{
-    //     const mediaArrayFilteredByPlatform = []
-    //     filteredMedia.filter((media)=> media.platformId === platformFilter)
-    //     setFilteredMedia(mediaArrayFilteredByPlatform)
-    //     console.log(filteredMedia)
-    //     console.log(platformFilter)
-    // }, [platformFilter])
 
     useEffect(() => {
         fetch("http://localhost:8088/media")
@@ -82,6 +75,17 @@ export const MediaList = ({ searchTermState }) => {
         []
     )
 
+    //defines current users collecions
+    useEffect(()=>{
+        let thisArray = []
+        for (const collection of collections) {
+            if(collection.userId === localUserObject.id){
+                thisArray.push(collection)
+            }
+        }
+        setUsersCollections(thisArray)
+    },[collections])
+
     useEffect(
         () => {
             setFilteredMedia(mediaItems)
@@ -94,8 +98,8 @@ export const MediaList = ({ searchTermState }) => {
         () => {
             console.log(searchTermState)
             const searchedMedia = mediaItems.filter(media => {
-                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase()) && 
-                (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter))
+                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase()) &&
+                    (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter))
             })
             setFilteredMedia(searchedMedia)
             console.log(filteredMedia)
@@ -107,7 +111,7 @@ export const MediaList = ({ searchTermState }) => {
 
     //function to post media to collections
     const addToCollection = (mediaId, collectionId) => {
-        const collectionMediaToSendToAPI ={
+        const collectionMediaToSendToAPI = {
             mediaId: mediaId,
             collectionId: parseInt(collectionId)
         }
@@ -123,43 +127,50 @@ export const MediaList = ({ searchTermState }) => {
             .then(response => response.json())
     }
 
+
+
+
     return (<>
         <section className="searchfilters">
             Filter by Platform:<select
-                
+
                 value={platformFilter}
-                onChange={(event)=> setPlatformFilter(event.target.value)}>
-                    <option value={0}>Any</option>
-                    {platformsArray.map((platform)=>(
-                        <option key={platform.id} value={platform.id}>
-                            {platform.name}
-                        </option>
-                    ))}
-                
+                onChange={(event) => setPlatformFilter(event.target.value)}>
+                <option value={0}>Any</option>
+                {platformsArray.map((platform) => (
+                    <option key={platform.id} value={platform.id}>
+                        {platform.name}
+                    </option>
+                ))}
+
             </select>
         </section>
         <section className="MediaList">
             {filteredMedia.map((media) => {
                 return <div className="mediaItem" key={media.id} data-id={media.id}>
                     <h2>{media.title}</h2>
-                    <img src={media.image} alt="image not found XP" width={100} />
+                    <p>by {media.creator}</p>
+                    <img src={media.image} alt="image not found XP" width={150} />
                     {/*dropdown and button to add item to collection */}
                     <select
                         value={selectedCollectionId}
                         onChange={(event) => setSelectedCollectionId(event.target.value)}>
                         <option value={0}>Add to a collection</option>
-                        {collections.map((collection) => (
+                        {usersCollections.map((collection) => (
                             <option key={collection.id} value={collection.id}>
                                 {collection.name}
                             </option>
                         ))}
                     </select>
-                    <button onClick={() =>selectedCollectionId != 0 ? addToCollection(media.id, selectedCollectionId): <></>}>
+                    <button onClick={() => selectedCollectionId != 0 ? addToCollection(media.id, selectedCollectionId) : <></>}>
                         +
                     </button>
                     {(media.userId === localUserObject.id || localUserObject.admin === true) ? <>
-                    <button onClick={()=>{navigate(`/editmedia/${media.id}`)}}>edit media</button>
-                    </>:<></>}
+                        <button onClick={() => { navigate(`/editmedia/${media.id}`) }}>edit media</button>
+                    </> : <></>}
+                    {(localUserObject.admin) ? <>
+
+                    </> : <></>}
                 </div>
             })}
         </section>
