@@ -12,12 +12,31 @@ export const MediaList = ({ searchTermState }) => {
     const [count, setCount] = useState(0)
     const [usersCollections, setUsersCollections] = useState([])
     const [searchSetting, setSearchSetting] = useState(0)
+    const [genreFilter, setGenreFilter] = useState(0)
+    const [genreArray, setGenreArray] = useState([])
+    const [genreJoinArray, setGenreJoinArray] = useState([])
 
 
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
     const navigate = useNavigate()
 
+    //function that sets the search to search titles or creators
+    const handleSearchTermsSelect = (event) => {
+        setSearchSetting(parseInt(event.target.value))
+    }
+
+    useEffect(() => {
+        fetch(`http://localhost:8088/genre`)
+            .then((response) => response.json())
+            .then((data) => { setGenreArray(data) })
+    }, [])
+
+    useEffect(() => {
+        fetch(`http://localhost:8088/mediaGenre`)
+            .then((response) => response.json())
+            .then((data) => { setGenreJoinArray(data) })
+    }, [])
 
     useEffect(() => {
         fetch(`http://localhost:8088/platform`)
@@ -26,6 +45,11 @@ export const MediaList = ({ searchTermState }) => {
                 setPlatformsArray(data)
             })
     }, [])
+
+    //rerenders page when genrefilter is changed
+    useEffect(()=>{
+        console.log(genreFilter)
+    }, [genreFilter])
 
     useEffect(() => {
         console.log('yo')
@@ -49,7 +73,7 @@ export const MediaList = ({ searchTermState }) => {
                     }
                 }
             })
-        
+
         console.log(filteredMedia)
     }, [platformFilter])
 
@@ -76,15 +100,15 @@ export const MediaList = ({ searchTermState }) => {
     )
 
     //defines current users collecions
-    useEffect(()=>{
+    useEffect(() => {
         let thisArray = []
         for (const collection of collections) {
-            if(collection.userId === localUserObject.id){
+            if (collection.userId === localUserObject.id) {
                 thisArray.push(collection)
             }
         }
         setUsersCollections(thisArray)
-    },[collections])
+    }, [collections])
 
     useEffect(
         () => {
@@ -98,14 +122,26 @@ export const MediaList = ({ searchTermState }) => {
         () => {
             console.log(searchTermState)
             const searchedMedia = mediaItems.filter(media => {
-                return media.title.toLowerCase().startsWith(searchTermState.toLowerCase()) &&
-                    (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter))
+                if (searchSetting === 0) {
+                    return (
+                        (media.title.toLowerCase().startsWith(searchTermState.toLowerCase())) &&
+                        (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter)) &&
+                        (parseInt(genreFilter) === 0 || genreJoinArray.some(join => parseInt(join.mediaId) === parseInt(media.id) && parseInt(join.genreId) === parseInt(genreFilter)))
+                    )
+                } else {
+                    return (
+                        media.creator.toLowerCase().startsWith(searchTermState.toLowerCase()) &&
+                        (parseInt(platformFilter) === 0 || parseInt(media.platformId) === parseInt(platformFilter)) &&
+                        (parseInt(genreFilter) === 0 || genreJoinArray.some(join => parseInt(join.mediaId) === parseInt(media.id) && parseInt(join.genreId) === parseInt(genreFilter)))
+                    )
+                }
+
             })
             setFilteredMedia(searchedMedia)
             console.log(filteredMedia)
             console.log(platformFilter)
         },
-        [searchTermState, mediaItems]
+        [searchTermState, searchSetting, mediaItems, genreFilter]
     )
 
 
@@ -131,7 +167,16 @@ export const MediaList = ({ searchTermState }) => {
 
 
     return (<>
-        <section className="searchfilters">
+        <section className="searchtermsfilter">
+            <div>
+                Search by:
+                <select onChange={handleSearchTermsSelect}>
+                    <option value={0}>Title</option>
+                    <option value={1}>Author/Developer</option>
+                </select>
+            </div>
+        </section>
+        <section className="platformsearchfilters">
             Filter by Platform:<select
 
                 value={platformFilter}
@@ -140,6 +185,20 @@ export const MediaList = ({ searchTermState }) => {
                 {platformsArray.map((platform) => (
                     <option key={platform.id} value={platform.id}>
                         {platform.name}
+                    </option>
+                ))}
+
+            </select>
+        </section>
+        <section className="genresearchfilters">
+            Filter by Genre:<select
+
+                value={genreFilter}
+                onChange={(event) => setGenreFilter(event.target.value)}>
+                <option value={0}>Any</option>
+                {genreArray.map((genre) => (
+                    <option key={genre.id} value={genre.id}>
+                        {genre.name} - {genre.type}
                     </option>
                 ))}
 
