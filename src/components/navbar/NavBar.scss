@@ -1,0 +1,31 @@
+.navbar {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    background-color: black;
+    border: solid 4px rgb(138, 138, 138);
+    border-radius: .75%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.navbar__item {
+    flex-basis: 20%;
+    list-style-type: none;
+    color: white;
+    padding-left: 5px;
+}
+
+.navbar__logout {
+    margin-left: auto;
+    justify-content: right;
+}
+
+.navbar__link{
+    color: white;
+    &:hover{
+        color: #6b21a3;
+    }
+    font-size: larger;
+}
+

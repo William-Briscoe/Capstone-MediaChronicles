@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom";
+import { EditCollectionMedia } from "../media/EditCollectionMedia";
 
 
 export const EditCollection = () =>{
@@ -60,7 +61,7 @@ export const EditCollection = () =>{
             </fieldset>
             <fieldset>
                 <div>
-                    <label htmlFor="description">Description</label>
+                    <label htmlFor="description">Description:</label>
                     <input
                         required autoFocus
                         type="text"
@@ -78,7 +79,7 @@ export const EditCollection = () =>{
             </fieldset>
             <fieldset>
                 <div>
-                    <label htmlFor="picture">Image</label>
+                    <label htmlFor="picture">Image:</label>
                     <input
                         required autoFocus
                         type="text"
@@ -105,9 +106,10 @@ export const EditCollection = () =>{
                                 copy.isPrivate =event.target.checked
                                 setCollection(copy)
                             }
-                        }/>
+                        }/>Private?
                 </div>
             </fieldset>
+            {EditCollectionMedia(collectionId)}
             <button
                 onClick={(clickEvent)=>handleSaveButtonClick(clickEvent)}
                 className="btn btn-primary">

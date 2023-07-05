@@ -10,6 +10,7 @@ export const IndividualCollection = () => {
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
     const navigate = useNavigate()
+    
     const { collectionId } = useParams()
     const [collection, setCollection] = useState({})
     const [collectionsUser, setCollectionsUser] = useState({})
@@ -19,6 +20,7 @@ export const IndividualCollection = () => {
     const [collectionContents, setCollectionContents] = useState([])
     const [platforms, setPlatforms] = useState([])
     const [listViewItems, setListViewItems] = useState([])
+    const [userId, setUserId] = useState(0)
 
 
     const handleDeleteButtonClick = (event) => {
@@ -48,6 +50,9 @@ export const IndividualCollection = () => {
             })
     }
 
+    useEffect(()=>{
+        console.log('hehe')
+    },[userId])
     //grabs platform array
     useEffect(() => {
         fetch(`http://localhost:8088/platform`)
@@ -63,6 +68,7 @@ export const IndividualCollection = () => {
             .then((response) => response.json())
             .then((thiscollection) => {
                 setCollection(thiscollection)
+                setUserId(collection.userId)
             })
             .then(setLoading(false))
     },
@@ -111,7 +117,7 @@ export const IndividualCollection = () => {
             }
 
         }
-        setListViewItems(listArray)
+        setListViewItems(listArray.sort())
         console.log(listArray, 'list array')
     }, [collectionContents])
 
@@ -160,13 +166,14 @@ export const IndividualCollection = () => {
         <div className="gallery view">
             {collectionContents.map((itemm) => {
                 return (<><h3>{itemm.title}</h3>
-                    <img src={itemm.image} alt="oh no" width={100}></img></>)
+                    <img src={itemm.image} alt="oh no" width={100}></img>
+                    {userId === localUserObject.id ? <button>remove</button> : <></>}</>)
             })}
         </div>
         <div className="list view">
             <ul>
-                {listViewItems.map((element)=>{
-                    return(<li>{element}</li>)
+                {listViewItems.map((element) => {
+                    return (<li>{element}</li>)
                 })}
             </ul>
         </div>

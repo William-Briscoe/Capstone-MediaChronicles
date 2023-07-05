@@ -1,5 +1,6 @@
 import { Component, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import "./MediaList.scss"
 
 
 export const MediaList = ({ searchTermState }) => {
@@ -47,7 +48,7 @@ export const MediaList = ({ searchTermState }) => {
     }, [])
 
     //rerenders page when genrefilter is changed
-    useEffect(()=>{
+    useEffect(() => {
         console.log(genreFilter)
     }, [genreFilter])
 
@@ -167,71 +168,85 @@ export const MediaList = ({ searchTermState }) => {
 
 
     return (<>
-        <section className="searchtermsfilter">
-            <div>
-                Search by:
-                <select onChange={handleSearchTermsSelect}>
-                    <option value={0}>Title</option>
-                    <option value={1}>Author/Developer</option>
-                </select>
+        <div className="searchfilters">
+            <div className="col-sm-4">
+                <section className="searchtermsfilter">
+                    <div>
+                        Search by:
+                        <select onChange={handleSearchTermsSelect}>
+                            <option value={0}>Title</option>
+                            <option value={1}>Author/Developer</option>
+                        </select>
+                    </div>
+                </section>
             </div>
-        </section>
-        <section className="platformsearchfilters">
-            Filter by Platform:<select
-
-                value={platformFilter}
-                onChange={(event) => setPlatformFilter(event.target.value)}>
-                <option value={0}>Any</option>
-                {platformsArray.map((platform) => (
-                    <option key={platform.id} value={platform.id}>
-                        {platform.name}
-                    </option>
-                ))}
-
-            </select>
-        </section>
-        <section className="genresearchfilters">
-            Filter by Genre:<select
-
-                value={genreFilter}
-                onChange={(event) => setGenreFilter(event.target.value)}>
-                <option value={0}>Any</option>
-                {genreArray.map((genre) => (
-                    <option key={genre.id} value={genre.id}>
-                        {genre.name} - {genre.type}
-                    </option>
-                ))}
-
-            </select>
-        </section>
-        <section className="MediaList">
-            {filteredMedia.map((media) => {
-                return <div className="mediaItem" key={media.id} data-id={media.id}>
-                    <h2>{media.title}</h2>
-                    <p>by {media.creator}</p>
-                    <img src={media.image} alt="image not found XP" width={150} />
-                    {/*dropdown and button to add item to collection */}
+            <div className="col-sm-4">
+                <section className="platformsearchfilters">
+                    Filter by Platform:
                     <select
-                        value={selectedCollectionId}
-                        onChange={(event) => setSelectedCollectionId(event.target.value)}>
-                        <option value={0}>Add to a collection</option>
-                        {usersCollections.map((collection) => (
-                            <option key={collection.id} value={collection.id}>
-                                {collection.name}
+                        value={platformFilter}
+                        onChange={(event) => setPlatformFilter(event.target.value)}
+                    >
+                        <option value={0}>Any</option>
+                        {platformsArray.map((platform) => (
+                            <option key={platform.id} value={platform.id}>
+                                {platform.name}
                             </option>
                         ))}
                     </select>
-                    <button onClick={() => selectedCollectionId != 0 ? addToCollection(media.id, selectedCollectionId) : <></>}>
-                        +
-                    </button>
-                    {(media.userId === localUserObject.id || localUserObject.admin === true) ? <>
-                        <button onClick={() => { navigate(`/editmedia/${media.id}`) }}>edit media</button>
-                    </> : <></>}
-                    {(localUserObject.admin) ? <>
+                </section>
+            </div>
+            <div className="col-sm-4">
+                <section className="genresearchfilters">
+                    Filter by Genre:
+                    <select
+                        value={genreFilter}
+                        onChange={(event) => setGenreFilter(event.target.value)}
+                    >
+                        <option value={0}>Any</option>
+                        {genreArray.map((genre) => (
+                            <option key={genre.id} value={genre.id}>
+                                {genre.name} - {genre.type}
+                            </option>
+                        ))}
+                    </select>
+                </section>
+            </div>
+        </div>
+        <section className="container">
+            <div className="row">
+                {filteredMedia.map((media) => {
+                    return <div className="col-sm-6 col-md-4 col-lg-3" key={media.id} data-id={media.id}>
+                        <div className="mediaitem">
+                            <h2>{media.title}</h2>
+                            <p>by {media.creator}</p>
+                            <img src={media.image} alt="image not found XP" width={150} />
+                            {/*dropdown and button to add item to collection */}
+                            <select defaultValue=""
+                                value={selectedCollectionId}
+                                onChange={(event) => setSelectedCollectionId(event.target.value)}>
+                                <option disabled value=''>Add to a collection</option>
+                                {usersCollections.map((collection) => (
+                                    <option key={collection.id} value={collection.id}>
+                                        {collection.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button className="btn-secondary" onClick={() => selectedCollectionId != 0 ? addToCollection(media.id, selectedCollectionId) : <></>}>
+                                +
+                            </button>
+                        </div>
+                        <div>
+                            {(media.userId === localUserObject.id || localUserObject.admin === true) ? <>
+                                <button onClick={() => { navigate(`/editmedia/${media.id}`) }}>Edit media</button>
+                            </> : <></>}
+                            {(localUserObject.admin) ? <>
 
-                    </> : <></>}
-                </div>
-            })}
+                            </> : <></>}
+                        </div>
+                    </div>
+                })}
+            </div>
         </section>
     </>)
 }

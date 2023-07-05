@@ -1,0 +1,38 @@
+.avatar{
+    border-radius: 10%;
+    width: 100px;
+    height: 100px;
+}
+body{
+    justify-content: center;
+}
+.profileInfo{
+    display: flex;
+    padding: 1%;
+    background-color: black;
+    max-width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border: solid 4px rgb(138, 138, 138);
+}
+
+.profiletext{
+    padding-left: 20px;
+    padding-top: 1%;
+    width: 90%;
+}
+
+.editprofile{
+    justify-content: right;
+    // margin-left: 60%;
+}
+
+.titleandbutton{
+    display: flex;
+    flex-direction: row;
+    padding-left: 10%;
+}
+
+.userscollections{
+    padding-right: 60%;
+}

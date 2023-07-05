@@ -21,12 +21,16 @@ import { Chronicles } from "./components/Chronicles"
 import { createRoot } from "react-dom/client"
 import "./index.css"
 import { BrowserRouter } from "react-router-dom"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './MediaChronicles.scss'
 
 const container = document.getElementById("root")
 const root = createRoot(container)
 root.render(
     <BrowserRouter>
+    <div className="p-5">
         <Chronicles />
+    </div>
     </BrowserRouter>
 )
 

@@ -2,8 +2,9 @@ import { UserCollectionList } from "../collections/UserCollectionList"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "./ProfilePage.scss"
 
-export const ProfilePage = (userObject) =>{
+export const ProfilePage = (userObject) => {
 
     //declarations
     const navigate = useNavigate()
@@ -12,42 +13,42 @@ export const ProfilePage = (userObject) =>{
 
     console.log(userObject)
 
-    const handleEditButtonClick = () =>{
+    const handleEditButtonClick = () => {
 
     }
 
 
     return (<>
-        <h2>User Info</h2>
+
         <section>
-            
-            <div>
+
+            <div className="profileInfo">
                 <div>
-                    <img src={userObject.picture} alt="beautiful profile pic" width={80} height={100}/>
+                    <img className="avatar" src={userObject.picture} alt="beautiful profile pic" width={80} height={100} />
                 </div>
-                <div>
-                    <div className="name">{userObject.name}</div>
+                <div className="profiletext">
+                    <h4 className="name">{userObject.name}</h4>
                     <div className="bio">{userObject.bio}</div>
                 </div>
-                <div>
-                    {userObject.id === localUserObject.id ? <button onClick={() =>{
+                <div className="editprofile">
+                    {userObject.id === localUserObject.id ? <button onClick={() => {
                         navigate(`/editprofile/${localUserObject.id}`)
-                    }}>Edit Profile</button>: <></>}
+                    }}>Edit Profile</button> : <></>}
                 </div>
             </div>
             <div>
-                
-                {userObject.id === localUserObject.id
-                    ?<>
-                    <h2>Your Collections</h2>
-                    <button onClick={()=>{navigate("/createcollection")}}>Create a Collection</button>
-                    </>
-                    : <>
-                    <h2>{userObject.name}'s Collections</h2>
-                    
-                    </>
-                }
-                
+                <div className="titleandbutton">
+                    {userObject.id === localUserObject.id
+                        ? <>
+                            <h2 className="userscollections">Your Collections</h2>
+                            <button onClick={() => { navigate("/createcollection") }}>Create a Collection</button>
+                        </>
+                        : <>
+                            <h2>{userObject.name}'s Collections</h2>
+
+                        </>
+                    }
+                </div>
                 {UserCollectionList(userObject.id)}
             </div>
 
@@ -56,7 +57,7 @@ export const ProfilePage = (userObject) =>{
         <section>
             {/* //value enhancing who you follow */}
         </section>
-        </>
+    </>
     )
 
 }

@@ -1,6 +1,8 @@
+import "./MediaSearch.scss"
+
 export const MediaSearch = ({ setterFunction }) =>{
     return (
-        <div>
+        <div className="searchbar">
         <input 
             onChange={
                 (changeEvent) =>{
