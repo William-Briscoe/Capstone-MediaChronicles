@@ -1,6 +1,8 @@
+import "./UserSearch.scss"
+
 export const UserSearch = ({ setterFunction }) =>{
     return (
-        <div>
+        <div className="usersearch">
         <input 
             onChange={
                 (changeEvent) =>{

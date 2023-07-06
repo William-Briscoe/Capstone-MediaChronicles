@@ -15,6 +15,16 @@ export const EditMedia = () => {
     const [genres, setGenres] = useState([])
     const [selectedGenres, setSelectedGenres] = useState([])
 
+    //checks if genre media join is present
+    const genreCheck = (genre)=>{
+        for (const join of genreJoin) {
+            if(parseInt(join.mediaId) === parseInt(mediaId) && parseInt(join.genreId) === parseInt(genre.id)){
+                genre.defaultchecked = true
+                selectedGenres.push(genre)
+            }
+        }
+    }
+
     //inital state of selectedGenres
     useEffect(()=>{
         let temporaryGenreArray = []
@@ -160,7 +170,7 @@ export const EditMedia = () => {
     }
 
     return (
-        <form className="mediacreationform">
+        <form className="mediacreationform container">
             <h2 className="mediaFormTitle">Edit Media Item</h2>
             <button onClick={(clickEvent)=>{handleDeleteMedia(clickEvent)}}>Delete Media</button>
             <fieldset>
@@ -254,8 +264,10 @@ export const EditMedia = () => {
             </fieldset>
             <fieldset>
                 <div>
-                    <label htmlFor="genres"><h4>RESET THE GENRES:</h4></label>
+                    <label htmlFor="genres"><h4>Genres:</h4></label>
                     {genres.map((genre) => {
+                        genreCheck(genre)
+                        
                         if (
                             (isGame && genre.id >= 10) ||
                             (!isGame && genre.id >= 1 && genre.id <= 9)
@@ -264,10 +276,12 @@ export const EditMedia = () => {
                                 <div key={genre.id}>
                                     <input
                                         type="checkbox"
-                                        id={`${genre.id}`}
+                                        id={genre.id}
                                         name={genre.name}
+                                        defaultChecked={genre.defaultchecked}
                                         checked={genre.checked}
                                         onChange={(event) => {
+                                            
                                             if (event.target.checked) {
                                                 for (const g of genres) {
                                                     if (g.id === genre.id) {
@@ -284,6 +298,8 @@ export const EditMedia = () => {
                                                 setSelectedGenres(thisgenrearray)
                                             }
                                             console.log(selectedGenres)
+                                            console.log(genres)
+                                            console.log(event.target.id)
                                         }}
                                     />
                                     <label htmlFor={`genre-${genre.id}`}>{genre.name}</label>
@@ -298,7 +314,7 @@ export const EditMedia = () => {
                 onClick={(clickEvent) => {
                     handleSaveButtonClick(clickEvent)
                     handleGenreSave()}}
-                className="btn btn-primary">
+                className="">
                 Save Media Item
             </button>
         </form>

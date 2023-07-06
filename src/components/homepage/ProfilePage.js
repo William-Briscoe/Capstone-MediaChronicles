@@ -1,7 +1,7 @@
 import { UserCollectionList } from "../collections/UserCollectionList"
 import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import "./ProfilePage.scss"
 
 export const ProfilePage = (userObject) => {
@@ -11,12 +11,11 @@ export const ProfilePage = (userObject) => {
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
 
-    console.log(userObject)
+    
 
-    const handleEditButtonClick = () => {
-
-    }
-
+    useEffect(()=>{
+        console.log(userObject)
+    }, [userObject])
 
     return (<>
 

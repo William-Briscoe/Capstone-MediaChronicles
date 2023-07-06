@@ -48,7 +48,7 @@ export const CollectionCreation = () =>{
 
     //form JSX
     return(
-        <form className="collectionForm">
+        <form className="collectionForm container">
             <h2 className="collectionFormTitle">New Collection!!</h2>
             <fieldset>
                 <div>
@@ -120,7 +120,7 @@ export const CollectionCreation = () =>{
             </fieldset>
             <button
                 onClick={(clickEvent)=>handleSaveButtonClick(clickEvent)}
-                className="btn btn-primary">
+                className="">
                 Save Collection
             </button>
         </form>

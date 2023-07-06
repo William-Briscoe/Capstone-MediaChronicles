@@ -218,7 +218,7 @@ export const MediaList = ({ searchTermState }) => {
                 {filteredMedia.map((media) => {
                     return <div className="col-sm-6 col-md-4 col-lg-3" key={media.id} data-id={media.id}>
                         <div className="mediaitem">
-                            <h2>{media.title}</h2>
+                            <h3>{media.title}</h3>
                             <p>by {media.creator}</p>
                             <img src={media.image} alt="image not found XP" width={150} />
                             {/*dropdown and button to add item to collection */}

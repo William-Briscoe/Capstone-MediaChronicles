@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+//import "./MediaCreation.scss"
 
 export const MediaCreation = () => {
 
@@ -140,7 +141,7 @@ export const MediaCreation = () => {
     }
 
     return (
-        <form className="mediacreationform">
+        <form className="mediacreationform container">
             <h2 className="mediaFormTitle">New Media Item</h2>
             <fieldset>
                 <div>
@@ -279,7 +280,7 @@ export const MediaCreation = () => {
                     handleSaveButtonClick(clickEvent)
                     handleGenreSave(clickEvent)
                 }}
-                className="btn btn-primary">
+                >
                 Save Media Item
             </button>
         </form>

@@ -1,7 +1,8 @@
-import userEvent from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import "./IndividualCollection.scss"
 
 
 
@@ -10,7 +11,7 @@ export const IndividualCollection = () => {
     const localUser = localStorage.getItem("media_user")
     const localUserObject = JSON.parse(localUser)
     const navigate = useNavigate()
-    
+
     const { collectionId } = useParams()
     const [collection, setCollection] = useState({})
     const [collectionsUser, setCollectionsUser] = useState({})
@@ -39,9 +40,7 @@ export const IndividualCollection = () => {
                                 fetch(`http://localhost:8088/collectionMedia/${join.id}`, {
                                     method: "DELETE"
                                 })
-
                             }
-
                         }
                     })
             })
@@ -50,9 +49,9 @@ export const IndividualCollection = () => {
             })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log('hehe')
-    },[userId])
+    }, [userId])
     //grabs platform array
     useEffect(() => {
         fetch(`http://localhost:8088/platform`)
@@ -144,7 +143,7 @@ export const IndividualCollection = () => {
 
     return (<>
         <section>
-            <div>
+            <div className="collectioninfo">
                 {loading ?
                     <div>loading...</div>
                     : <>
@@ -152,9 +151,8 @@ export const IndividualCollection = () => {
                         <h3>by {collectionsUser.name}</h3>
                     </>}
 
-            </div>
-            <div>{collection.description}</div>
-            <div>
+            {collection.description}</div>
+            <div className="collectionbuttons">
                 {localUserObject.id === collection.userId ? <>
                     <button onClick={handleDeleteButtonClick}>delete collection</button>
                     <button onClick={() => { navigate(`/editcollection/${collectionId}`) }}>edit collection</button></> :
@@ -163,20 +161,27 @@ export const IndividualCollection = () => {
 
             </div>
         </section>
-        <div className="gallery view">
-            {collectionContents.map((itemm) => {
-                return (<><h3>{itemm.title}</h3>
-                    <img src={itemm.image} alt="oh no" width={100}></img>
-                    {userId === localUserObject.id ? <button>remove</button> : <></>}</>)
-            })}
+        <section className="collection">
+        <div className="galleryview p2">
+            <div className="container row">
+                {collectionContents.map((itemm) => {
+                    return (
+                        <div className="col-sm-6 col-md-4 col-lg-3">
+                            <h3>{itemm.title}</h3>
+                            <img src={itemm.image} alt="oh no" width={100}></img>
+                        </div>
+                    )
+                })}
+            </div>
         </div>
-        <div className="list view">
+        <div className="listview">
             <ul>
                 {listViewItems.map((element) => {
                     return (<li>{element}</li>)
                 })}
             </ul>
         </div>
+        </section>
         <section>
             <div>
 

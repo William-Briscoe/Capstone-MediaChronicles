@@ -29,9 +29,9 @@ export const Login = () => {
     }
 
     return (
-        <main className="container--login">
+        <main className="container--login p-5">
             <section>
-                <form className="form--login" onSubmit={handleLogin}>
+                <form className="form--login p-5" onSubmit={handleLogin}>
                     <h1>Media Chronicles</h1>
                     <h2>Please sign in</h2>
                     <fieldset>
@@ -43,7 +43,7 @@ export const Login = () => {
                             placeholder="Email address"
                             required autoFocus />
                     </fieldset>
-                    <fieldset>
+                    <fieldset className="p-3">
                         <button type="submit">
                             Sign in
                         </button>

@@ -1,0 +1,31 @@
+.galleryview{
+    margin-left: 8%;
+    
+    justify-content: center;
+    
+}
+
+.listview{
+    margin-right: 8%;
+    background-color: rgb(0, 0, 0);
+    border: solid 8px rgb(138, 138, 138) ;
+    border-radius: .75%;
+    
+}
+
+.collection{
+    display: flex;
+
+}
+
+.collectioninfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 15%;
+}
+
+.collectionbuttons{
+    padding: 1%;
+    margin-left: 13%;
+}

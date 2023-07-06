@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import "./UserList.scss"
 
 
 export const UserList = ({ searchTermState }) => {
@@ -36,7 +37,7 @@ export const UserList = ({ searchTermState }) => {
         () => {
             setFilteredUsers(users)
         },
-        []
+        [users]
     )
 
     //observes state of the search bar to filter
@@ -53,7 +54,7 @@ export const UserList = ({ searchTermState }) => {
 
     return (
 
-        <section className="UsersList">
+        <section className="UsersList container">
             {filteredUsers.map((user) => {
                 return <div className="user" key={user.id} data-id={user.id}>
                     {/* <header>{user.name}</header> */}
@@ -61,7 +62,7 @@ export const UserList = ({ searchTermState }) => {
                         <a href={`/user/${user.id}`} onClick={(event) => {
                             event.preventDefault()
                             navigate(`/user/${user.id}`)
-                        }}><img src={user.picture} height={100}/>{user.name}</a>
+                        }}><img className="avatar" src={user.picture} height={100}/>{user.name}</a>
                     </header>
 
                 </div>

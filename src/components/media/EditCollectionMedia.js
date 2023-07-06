@@ -1,7 +1,8 @@
-import userEvent from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import "./EditCollectionMedia.scss"
 
 
 
@@ -16,6 +17,7 @@ export const EditCollectionMedia = (collectionId) => {
     const [collectionMedia, setCollectionMedia] = useState([])
     const [media, setMedia] = useState([])
     const [collectionContents, setCollectionContents] = useState([])
+    const [counter, setcounter] = useState(0)
 
     const handleDeleteItem = (item) => {
         for (const join of collectionMedia) {
@@ -23,9 +25,17 @@ export const EditCollectionMedia = (collectionId) => {
                 fetch(`http://localhost:8088/collectionMedia/${join.id}`, {
                     method: "DELETE"
                 })
+                
             }
+            
         }
+        setCollection({...collection})
+        setcounter(counter + 1)
     }
+
+    useEffect(()=>{
+        console.log("counter", counter)
+    }, [counter])
 
     useEffect(() => {
         setLoading(true)
@@ -56,7 +66,7 @@ export const EditCollectionMedia = (collectionId) => {
                 setCollectionMedia(theseJoins)
             })
     },
-        []
+        [collection, counter]
     )
 
     useEffect(() => {
@@ -84,21 +94,20 @@ export const EditCollectionMedia = (collectionId) => {
         console.log(collectionContents)
     }
         ,
-        [collectionsUser]
+        [collectionsUser, counter]
     )
 
 
 
 
     return (<section>
-        <div>
+        <div className="media">
             {collectionContents.map((itemm) => {
-                return (<><h2>{itemm.title}</h2>
+                return (<><h3>{itemm.title}</h3>
                     <img src={itemm.image} alt="oh no" width={100}></img>
-                    <button onClick={() =>{handleDeleteItem(itemm)}}>Delete Item</button></>)
+                    <button onClick={() =>{handleDeleteItem(itemm) 
+                    setcounter(counter +1)}}>Delete Item</button></>)
             })}
-
-
         </div>
     </section>)
 }

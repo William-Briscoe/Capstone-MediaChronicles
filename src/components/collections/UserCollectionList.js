@@ -29,7 +29,7 @@ export const UserCollectionList = (userId) => {
             const usersCollections = collections.filter(collection => collection.userId === userId)
             setFilteredCollections(usersCollections)
         },
-        [collections]
+        [collections, userId]
     )
 
     return (

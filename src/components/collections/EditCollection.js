@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useParams } from "react-router-dom";
-import { EditCollectionMedia } from "../media/EditCollectionMedia";
-
+import { useParams } from "react-router-dom"
+import { EditCollectionMedia } from "../media/EditCollectionMedia"
+import "./EditCollection.scss"
 
 export const EditCollection = () =>{
     
@@ -39,7 +39,7 @@ export const EditCollection = () =>{
 
     return(<>
         
-        <form className="collectionForm">
+        <form className="collectionForm container">
             <h2 className="collectionFormTitle">Edit Collection</h2>
             <fieldset>
                 <div>
@@ -108,13 +108,15 @@ export const EditCollection = () =>{
                             }
                         }/>Private?
                 </div>
-            </fieldset>
-            {EditCollectionMedia(collectionId)}
-            <button
+            </fieldset><button
                 onClick={(clickEvent)=>handleSaveButtonClick(clickEvent)}
-                className="btn btn-primary">
+                className="p-1 savecollection">
                 Save Collection
             </button>
         </form>
+            <div className="container">
+            {EditCollectionMedia(collectionId)}
+            </div>
+            
     </>)
 }
